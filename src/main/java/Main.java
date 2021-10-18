@@ -1,3 +1,5 @@
+import com.sun.org.apache.xalan.internal.res.XSLTErrorResources;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
@@ -15,12 +17,14 @@ public class Main {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(System.in))) {
             String command = "";
             String[] parse = null;
+            TaskService service = TaskService.getTaskService();
             while(!command.equals(QUIT)) {
                 command = reader.readLine();
                 if (command.equals("") || command.replaceAll(" ", "").length() == 0) {
                     System.err.println("Строка пуста или состоит из пробелов! Повторите ввод: ");
                 }
                 parse = command.split("\\s+");
+
 
                 switch (parse[0]){
                     case ADD:
@@ -32,18 +36,24 @@ public class Main {
                         break;
                     case PRINT:
                         if(parse.length == 2 && parse[1].equals(ALL)){
-                            TaskService.getTaskService().printAll();
+                            service.printAll();
                         }else if(parse.length == 1){
-                            TaskService.getTaskService().print();
+                            service.print();
                         }else{
                             System.err.print("Введена не корректная команда печати задач повторите ввод: ");
                         }
                         break;
                     case TOGGLE:
-                        if(parse.length != 1) {
-                            System.err.println("Не верная команда повторите ввод: ");
+                        try {
+                            if (parse.length == 2) {
+                                Integer id = Integer.parseInt(parse[1]);
+                                service.toggle(id);
+                            }else{
+                                System.err.print("Не корректный ввод повторите коману: ");
+                            }
+                        }catch (RuntimeException e){
+                            System.err.print("Введен не корректный id повторите ввод: ");
                         }
-                            TaskService.getTaskService().toggle(1);
                         break;
                     case QUIT:
                         System.out.println("Завершение работы программы!");

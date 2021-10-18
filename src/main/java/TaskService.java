@@ -23,17 +23,17 @@ public class TaskService {
 
     public void toggle(int id) {
 
-        taskService.completed = taskService.completed ? false : true;
+        taskService.completed = !taskService.completed;
     }
 
     public void print(){
         if(taskService.completed != true && taskService.task != null){
-            System.out.println(String.format("%d. [не выполнена] %s", taskService.id, taskService.task));
+            System.out.println(String.format("%d.   %s", taskService.id, taskService.task));
         }
     }
     public void printAll(){
         if(taskService.task != null) {
-            System.out.println(String.format("%d. [%s] %s", taskService.id, taskService.completed == true ? "выполнена" : "не выполнена", taskService.task));
+            System.out.println(String.format("%d. %s %s", taskService.id, taskService.completed == true ? "x" : " ", taskService.task));
         }
     }
 
