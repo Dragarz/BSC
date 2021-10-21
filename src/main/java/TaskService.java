@@ -19,7 +19,6 @@ public class TaskService {
 //        taskSMap.put(id++, this);
 //        this.task = task;
 //        this.completed = false;
-//
 //    }
     private TaskService(String task){
         if(taskSMap == null){
