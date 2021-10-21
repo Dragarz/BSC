@@ -1,5 +1,3 @@
-import com.sun.org.apache.xalan.internal.res.XSLTErrorResources;
-
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
@@ -21,6 +19,7 @@ public class Main {
                 command = reader.readLine();
                 if (command.equals("") || command.replaceAll(" ", "").length() == 0) {
                     System.err.println("Строка пуста или состоит из пробелов! Повторите ввод: ");
+                    continue;
                 }
                 parse = command.split("\\s+");
 
@@ -31,6 +30,7 @@ public class Main {
                             TaskService.add(buildComm(parse));
                         }else{
                             System.err.print("Попытка создать пустую задачу повторите ввод: ");
+
                         }
                         break;
                     case PRINT:
