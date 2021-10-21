@@ -1,39 +1,64 @@
+
+import java.util.HashMap;
+import java.util.Map;
+
 public class TaskService {
-    //Внесение новых изменений
-    private static TaskService taskService = null;
-    private int id = 1;
+
+    private static Map<Integer, TaskService> taskSMap = null;
+    private static int id = 1;
     private String task = null;
-    private boolean completed = false;
+    private Boolean completed = null;
 
-    public static TaskService getTaskService(){
-        if(taskService == null){
-            taskService = new TaskService();
+
+
+
+//    private TaskService(String task){
+//        if(taskSMap == null){
+//            taskSMap = new HashMap<>();
+//        }
+//        taskSMap.put(id++, this);
+//        this.task = task;
+//        this.completed = false;
+//
+//    }
+    private TaskService(String task){
+        if(taskSMap == null){
+            taskSMap = new HashMap<>();
+            taskSMap.put(id, this);
+        }else {
+            taskSMap.replace(id, this);
         }
-        return taskService;
-    }
-
-    private TaskService(){
+        this.task = task;
+        this.completed = false;
 
     }
 
-    public void add(String task){
-        taskService.task = task;
-        taskService.completed = false;
+    public static void add(String task){
+        new TaskService(task);
     }
 
-    public void toggle(int id) {
-
-        taskService.completed = !taskService.completed;
-    }
-
-    public void print(){
-        if(taskService.completed != true && taskService.task != null){
-            System.out.println(String.format("%d.   %s", taskService.id, taskService.task));
+    public static void toggle(int id) {
+        for(var s : taskSMap.keySet()){
+            if(s.equals(id)){
+                taskSMap.get(s).completed = !taskSMap.get(s).completed;
+                return;
+            }
         }
+        System.err.println("Задачи с данным id - " + id + "не найдено!");
     }
-    public void printAll(){
-        if(taskService.task != null) {
-            System.out.println(String.format("%d. %s %s", taskService.id, taskService.completed == true ? "x" : " ", taskService.task));
+
+    public static void print(){
+        for(var s : taskSMap.keySet()) {
+            if(taskSMap.get(s).completed == false) {
+                System.out.println(String.format("%d.   %s", s, taskSMap.get(s).task));
+            }
+        }
+
+
+    }
+    public static void printAll(){
+        for(var s : taskSMap.keySet()){
+            System.out.println(String.format("%d. %s %s", s, taskSMap.get(s).completed == true ? "[X]" : "[ ]", taskSMap.get(s).task));
         }
     }
 
