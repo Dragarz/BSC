@@ -14,8 +14,7 @@ public class Main {
 
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(System.in))) {
             String command = "";
-            String[] parse = null;
-            TaskService service = TaskService.getTaskService();
+            String[] parse;
             while(!command.equals(QUIT)) {
                 command = reader.readLine();
                 if (command.equals("") || command.replaceAll(" ", "").length() == 0) {
@@ -28,7 +27,7 @@ public class Main {
                 switch (parse[0]){
                     case ADD:
                         if(parse.length > 1){
-                            TaskService.getTaskService().add(buildComm(parse));
+                            TaskService.add(buildComm(parse));
                         }else{
                             System.err.print("Попытка создать пустую задачу повторите ввод: ");
 
@@ -36,9 +35,9 @@ public class Main {
                         break;
                     case PRINT:
                         if(parse.length == 2 && parse[1].equals(ALL)){
-                            service.printAll();
+                            TaskService.printAll();
                         }else if(parse.length == 1){
-                            service.print();
+                            TaskService.print();
                         }else{
                             System.err.print("Введена не корректная команда печати задач повторите ввод: ");
                         }
@@ -47,7 +46,7 @@ public class Main {
                         try {
                             if (parse.length == 2) {
                                 Integer id = Integer.parseInt(parse[1]);
-                                service.toggle(id);
+                                TaskService.toggle(id);
                             }else{
                                 System.err.print("Не корректный ввод повторите коману: ");
                             }
