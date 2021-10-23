@@ -1,77 +1,86 @@
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 
-//Внесение новых изменений
-
-public class Main {
-    public final static String ADD = "add";
-    public final static String PRINT = "print";
-    public final static String TOGGLE = "toggle";
-    public final static String QUIT = "quit";
-    public final static String ALL =  "all";
+class Main {
+    public static final String ADD = "add";
+    public static final String TOGGLE = "toggle";
+    public static final String EDIT = "edit";
+    public static final String DELETE = "delete";
+    public static final String SEARCH = "search";
+    public static final String PRINT = "print";
+    public static final String QUIT = "quit";
 
     public static void main(String[] args) {
-
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(System.in))) {
             String command = "";
-            String[] parse = null;
-            TaskService service = TaskService.getTaskService();
-            while(!command.equals(QUIT)) {
+            String[] parse;
+            while (!command.equals(QUIT)) {
                 command = reader.readLine();
                 if (command.equals("") || command.replaceAll(" ", "").length() == 0) {
                     System.err.println("Строка пуста или состоит из пробелов! Повторите ввод: ");
                     continue;
                 }
                 parse = command.split("\\s+");
-
-
-                switch (parse[0]){
+                switch (parse[0]) {
                     case ADD:
-                        if(parse.length > 1){
-                            TaskService.getTaskService().add(buildComm(parse));
-                        }else{
-                            System.err.print("Попытка создать пустую задачу повторите ввод: ");
-
-                        }
+                        TaskService.add(buildComm(parse[0], parse));
+                        break;
+                    case DELETE:
+                        TaskService.delete(parse);
+                        break;
+                    case EDIT:
+                        TaskService.edit(parse, buildComm(EDIT, parse));
+                        break;
+                    case SEARCH:
+                        TaskService.search(buildComm(ADD, parse));
                         break;
                     case PRINT:
-                        if(parse.length == 2 && parse[1].equals(ALL)){
-                            service.printAll();
-                        }else if(parse.length == 1){
-                            service.print();
-                        }else{
-                            System.err.print("Введена не корректная команда печати задач повторите ввод: ");
-                        }
+                        TaskService.print(parse);
                         break;
                     case TOGGLE:
-                        try {
-                            if (parse.length == 2) {
-                                Integer id = Integer.parseInt(parse[1]);
-                                service.toggle(id);
-                            }else{
-                                System.err.print("Не корректный ввод повторите коману: ");
-                            }
-                        }catch (RuntimeException e){
-                            System.err.print("Введен не корректный id повторите ввод: ");
-                        }
+                        TaskService.toggle(parse);
                         break;
                     case QUIT:
-                        System.out.println("Завершение работы программы!");
+                        System.err.println("Программа завершена!");
                         break;
                     default:
                         System.err.print("Введена не корректная команда! повторите ввод: ");
                 }
-            }
 
-        }catch (Exception e){
-            e.printStackTrace();
+            }
+        } catch (IOException e) {
+
         }
     }
-    public static String buildComm(String[] str){
+
+    public static String buildComm(String comm, String[] str) {
         StringBuilder builder = new StringBuilder();
-        for(int i = 1; i < str.length; i++){
-            builder.append(str[i]).append(" ");
+        String st;
+        switch (comm) {
+            case ADD:
+                for (int i = 1; i < str.length; i++) {
+                    builder.append(str[i]).append(" ");
+                }
+                st = builder.toString().trim();
+                if (st.equals("")) {
+
+                    return null;
+                }
+                return st;
+
+            case EDIT:
+                for (int i = 2; i < str.length; i++) {
+                    builder.append(str[i]).append(" ");
+                }
+                st = builder.toString().trim();
+                if (st.equals("")) {
+
+                    return null;
+                }
+                return st;
+
         }
-        return builder.toString().trim();
+        return null;
     }
 }
