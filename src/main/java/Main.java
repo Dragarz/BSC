@@ -1,86 +1,53 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.function.Predicate;
+import java.util.regex.Pattern;
 
 class Main {
-    public static final String ADD = "add";
-    public static final String TOGGLE = "toggle";
-    public static final String EDIT = "edit";
-    public static final String DELETE = "delete";
-    public static final String SEARCH = "search";
-    public static final String PRINT = "print";
-    public static final String QUIT = "quit";
+
+    static final String ADD = "add .+";
+    static final String TOGGLE = "toggle \\d+";
+    static final String Print = "print all";
+    static final String DELETE = "delete \\d+";
+    static final String SEARCH = "search .+";
+    static final String EDIT = "edit \\d+ .+";
+    static final String QUIT = "quit";
+    static String command = "";
+    static Predicate<String> validate = str -> Pattern.matches(str, command);
+
 
     public static void main(String[] args) {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(System.in))) {
-            String command = "";
-            String[] parse;
             while (!command.equals(QUIT)) {
-                command = reader.readLine();
-                if (command.equals("") || command.replaceAll(" ", "").length() == 0) {
+                command = reader.readLine().trim();
+                if (validate.test("")) {
                     System.err.println("Строка пуста или состоит из пробелов! Повторите ввод: ");
                     continue;
                 }
-                parse = command.split("\\s+");
-                switch (parse[0]) {
-                    case ADD:
-                        TaskService.add(buildComm(parse[0], parse));
-                        break;
-                    case DELETE:
-                        TaskService.delete(parse);
-                        break;
-                    case EDIT:
-                        TaskService.edit(parse, buildComm(EDIT, parse));
-                        break;
-                    case SEARCH:
-                        TaskService.search(buildComm(ADD, parse));
-                        break;
-                    case PRINT:
-                        TaskService.print(parse);
-                        break;
-                    case TOGGLE:
-                        TaskService.toggle(parse);
-                        break;
-                    case QUIT:
-                        System.err.println("Программа завершена!");
-                        break;
-                    default:
-                        System.err.print("Введена не корректная команда! повторите ввод: ");
-                }
+                if (validate.test(QUIT)) {
+                    System.out.println("Конец программы!");
+                    continue;
 
+                } else if (validate.test(ADD)) {
+                    TaskService.add(command.substring(4).trim());
+                } else if (validate.test(TOGGLE)) {
+                    TaskService.toggle(command.substring(7).trim());
+                } else if (validate.test(Print) || validate.test("print")) {
+                    TaskService.print(command);
+                } else if (validate.test(DELETE)) {
+                    TaskService.delete(command.substring(7).trim());
+                } else if (validate.test(EDIT)) {
+                    TaskService.edit(command);
+                } else if (validate.test(SEARCH)) {
+                    TaskService.search(command.substring(7).trim());
+                } else {
+                    System.err.println("Команда не найдена повторите ввод: ");
+                }
             }
-        } catch (IOException e) {
-
+        } catch (IOException ignored) {
         }
     }
 
-    public static String buildComm(String comm, String[] str) {
-        StringBuilder builder = new StringBuilder();
-        String st;
-        switch (comm) {
-            case ADD:
-                for (int i = 1; i < str.length; i++) {
-                    builder.append(str[i]).append(" ");
-                }
-                st = builder.toString().trim();
-                if (st.equals("")) {
 
-                    return null;
-                }
-                return st;
-
-            case EDIT:
-                for (int i = 2; i < str.length; i++) {
-                    builder.append(str[i]).append(" ");
-                }
-                st = builder.toString().trim();
-                if (st.equals("")) {
-
-                    return null;
-                }
-                return st;
-
-        }
-        return null;
-    }
 }
