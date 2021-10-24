@@ -8,7 +8,7 @@ class Main {
 
     static final String ADD = "add .+";
     static final String TOGGLE = "toggle \\d+";
-    static final String Print = "print all";
+    static final String PRINT_ALL = "print all";
     static final String DELETE = "delete \\d+";
     static final String SEARCH = "search .+";
     static final String EDIT = "edit \\d+ .+";
@@ -33,7 +33,7 @@ class Main {
                     TaskService.add(command.substring(4).trim());
                 } else if (validate.test(TOGGLE)) {
                     TaskService.toggle(command.substring(7).trim());
-                } else if (validate.test(Print) || validate.test("print")) {
+                } else if (validate.test(PRINT_ALL) || validate.test("print")) {
                     TaskService.print(command);
                 } else if (validate.test(DELETE)) {
                     TaskService.delete(command.substring(7).trim());
