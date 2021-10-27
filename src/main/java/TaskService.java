@@ -2,7 +2,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class TaskService {
-    private static final int LENGTH_PRINT = "print".length();
+    private static final String PRINT = "print";
     private static Map<Integer, TaskService> Tasks = new HashMap<>();
     private static int id = 1;
     private String task;
@@ -31,7 +31,7 @@ public class TaskService {
 
     public static void print(String task) {
 
-        if (task.length() == LENGTH_PRINT) {
+        if (task.length() == PRINT.length()) {
             Tasks.entrySet().stream()
                     .filter(a -> !a.getValue().completed)
                     .forEach(a -> System.out.printf("%d. [ ] %s%n", a.getKey(), a.getValue().task));
