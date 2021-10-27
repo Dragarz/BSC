@@ -1,77 +1,57 @@
+
+import org.apache.commons.lang3.StringUtils;
+
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-//Внесение новых изменений
+class Main {
 
-public class Main {
-    public final static String ADD = "add";
-    public final static String PRINT = "print";
-    public final static String TOGGLE = "toggle";
-    public final static String QUIT = "quit";
-    public final static String ALL =  "all";
+    static final Pattern ADD_PATTERN = Pattern.compile("add .+");
+    static final Pattern TOGGLE_PATTERN = Pattern.compile("toggle \\d+");
+    static final Pattern PRINT_PATTERN = Pattern.compile("print|print all");
+    static final Pattern DELETE_PATTERN = Pattern.compile("delete \\d+");
+    static final Pattern SEARCH_PATTERN = Pattern.compile("search .+");
+    static final Pattern EDIT_PATTERN = Pattern.compile("edit \\d+ .+");
+    static final Pattern REST_PART_PATTERN = Pattern.compile(".+ ");
+    static final String QUIT = "quit";
+
 
     public static void main(String[] args) {
-
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(System.in))) {
             String command = "";
-            String[] parse = null;
-            TaskService service = TaskService.getTaskService();
-            while(!command.equals(QUIT)) {
-                command = reader.readLine();
-                if (command.equals("") || command.replaceAll(" ", "").length() == 0) {
+            Matcher restPartMatcher;
+            while (!command.equals(QUIT)) {
+                command = reader.readLine().trim();
+                if (command.equals("")) {
                     System.err.println("Строка пуста или состоит из пробелов! Повторите ввод: ");
                     continue;
                 }
-                parse = command.split("\\s+");
+                restPartMatcher = REST_PART_PATTERN.matcher(command);
+                if (command.equals(QUIT)) {
+                    System.out.println("Конец программы!");
 
-
-                switch (parse[0]){
-                    case ADD:
-                        if(parse.length > 1){
-                            TaskService.getTaskService().add(buildComm(parse));
-                        }else{
-                            System.err.print("Попытка создать пустую задачу повторите ввод: ");
-
-                        }
-                        break;
-                    case PRINT:
-                        if(parse.length == 2 && parse[1].equals(ALL)){
-                            service.printAll();
-                        }else if(parse.length == 1){
-                            service.print();
-                        }else{
-                            System.err.print("Введена не корректная команда печати задач повторите ввод: ");
-                        }
-                        break;
-                    case TOGGLE:
-                        try {
-                            if (parse.length == 2) {
-                                Integer id = Integer.parseInt(parse[1]);
-                                service.toggle(id);
-                            }else{
-                                System.err.print("Не корректный ввод повторите коману: ");
-                            }
-                        }catch (RuntimeException e){
-                            System.err.print("Введен не корректный id повторите ввод: ");
-                        }
-                        break;
-                    case QUIT:
-                        System.out.println("Завершение работы программы!");
-                        break;
-                    default:
-                        System.err.print("Введена не корректная команда! повторите ввод: ");
+                } else if (ADD_PATTERN.matcher(command).matches()) {
+                    TaskService.add(restPartMatcher.replaceAll(StringUtils.EMPTY));
+                } else if (TOGGLE_PATTERN.matcher(command).matches()) {
+                    TaskService.toggle(restPartMatcher.replaceAll(StringUtils.EMPTY));
+                } else if (PRINT_PATTERN.matcher(command).matches()) {
+                    TaskService.print(command);
+                } else if (DELETE_PATTERN.matcher(command).matches()) {
+                    TaskService.delete(restPartMatcher.replaceAll(StringUtils.EMPTY));
+                } else if (EDIT_PATTERN.matcher(command).matches()) {
+                    TaskService.edit(command);
+                } else if (SEARCH_PATTERN.matcher(command).matches()) {
+                    TaskService.search(restPartMatcher.replaceAll(StringUtils.EMPTY));
+                } else {
+                    System.err.println("Команда не найдена повторите ввод: ");
                 }
             }
+        } catch (IOException ignored) {
+        }
+    }
 
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-    }
-    public static String buildComm(String[] str){
-        StringBuilder builder = new StringBuilder();
-        for(int i = 1; i < str.length; i++){
-            builder.append(str[i]).append(" ");
-        }
-        return builder.toString().trim();
-    }
+
 }
