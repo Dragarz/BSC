@@ -23,6 +23,7 @@ class Main {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(System.in))) {
             String command = "";
             Matcher restPartMatcher;
+            Service taskService = new TaskService();
             while (!command.equals(QUIT)) {
                 command = reader.readLine().trim();
                 if (command.equals("")) {
@@ -34,17 +35,17 @@ class Main {
                     System.out.println("Конец программы!");
 
                 } else if (ADD_PATTERN.matcher(command).matches()) {
-                    TaskService.add(restPartMatcher.replaceAll(StringUtils.EMPTY));
+                    taskService.add(restPartMatcher.replaceAll(StringUtils.EMPTY).trim());
                 } else if (TOGGLE_PATTERN.matcher(command).matches()) {
-                    TaskService.toggle(restPartMatcher.replaceAll(StringUtils.EMPTY));
+                    taskService.toggle(restPartMatcher.replaceAll(StringUtils.EMPTY).trim());
                 } else if (PRINT_PATTERN.matcher(command).matches()) {
-                    TaskService.print(command);
+                    taskService.print(command);
                 } else if (DELETE_PATTERN.matcher(command).matches()) {
-                    TaskService.delete(restPartMatcher.replaceAll(StringUtils.EMPTY));
+                    taskService.delete(restPartMatcher.replaceAll(StringUtils.EMPTY).trim());
                 } else if (EDIT_PATTERN.matcher(command).matches()) {
-                    TaskService.edit(command);
+                    taskService.edit(command);
                 } else if (SEARCH_PATTERN.matcher(command).matches()) {
-                    TaskService.search(restPartMatcher.replaceAll(StringUtils.EMPTY));
+                    taskService.search(restPartMatcher.replaceAll(StringUtils.EMPTY).trim());
                 } else {
                     System.err.println("Команда не найдена повторите ввод: ");
                 }
