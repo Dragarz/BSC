@@ -33,8 +33,12 @@ public class Controller {
                         System.err.println("Задачи по данному id не существует.");
                     }
                 } else if (Constants.PRINT_PATTERN.matcher(command).matches()) {
-                    result = service.print(command);
-                    result.forEach((key, value) -> System.out.printf("%s. %s %s%n", key, value.getCompleted() ? "[X]" : "[ ]", value.getTask()));
+                    try {
+                        result = service.print(command);
+                        result.forEach((key, value) -> System.out.printf("%s. %s %s%n", key, value.getCompleted() ? "[X]" : "[ ]", value.getTask()));
+                    }catch (NullPointerException e){
+                        System.err.println("Список пуст");
+                    }
                 } else if (Constants.DELETE_PATTERN.matcher(command).matches()) {
                     try {
                         service.delete(Parser.ParseCommands(command));
