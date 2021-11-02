@@ -1,4 +1,4 @@
-package Entities;
+package model;
 
 public class TaskID {
     private static Integer id = 1;

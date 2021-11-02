@@ -1,13 +1,18 @@
-import Entities.Task;
-import Entities.TaskID;
-import Entities.TaskRepository;
+package service;
+
+import Utlis.Constants;
+import Utlis.Parser;
+import model.Task;
+import model.TaskID;
+import model.TaskRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class TaskService implements Service{
-    private static final Logger logger = LoggerFactory.getLogger(TaskService.class.getName());
+public class TaskService implements Service {
+    public static final Logger logger = LoggerFactory.getLogger(TaskService.class.getName());
     private TaskRepository taskRepository = null;
     private Map<String, Task> tasks;
     private Task task = null;
