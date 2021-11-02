@@ -1,76 +1,75 @@
-import java.util.HashMap;
+import Entities.Task;
+import Entities.TaskID;
+import Entities.TaskRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class TaskService implements Service{
-    private static final String PRINT = "print";
-    private static Map<Integer, Task> Tasks = new HashMap<>();
-    private static int id = 1;
+    private static final Logger logger = LoggerFactory.getLogger(TaskService.class.getName());
+    private TaskRepository taskRepository = null;
+    private Map<String, Task> tasks;
+    private Task task = null;
 
-    public TaskService(){
-
-    }
 
     @Override
-    public void add(String task) {
-        Tasks.put(id++, new TaskCreater(task));
+    public void add(String taskText) {
+        if(taskRepository == null){
+            taskRepository = new TaskRepository();
+            tasks = taskRepository.getTasks();
+        }
+        tasks.put(TaskID.getID(),new Task(taskText));
     }
+
     @Override
     public void toggle(String id) {
-
-        Task task = Tasks.get(Integer.parseInt(id));
+        logger.debug("Введённый id: "+ id, this.getClass().getName());
+        task = tasks.get(id);
         if (task != null) {
-            task.switchCompleted();
-            Main.logger.debug("Входящий параметр id = " + id + ", результат: Task complited - " + task.getCompleted());
+            task.setCompleted(!task.getCompleted());
         } else {
-            try{
-                throw new RuntimeException();
-            }catch (RuntimeException e) {
-                Main.logger.error("Введен не существующий id - " + id);
-                System.err.println("Задачи по данному id не существует.");
-            }
+            logger.error("Задачи по данному id не существует.", id);
+            throw new NullPointerException("Задачи по данному id не существует.");
         }
+
     }
+
     @Override
-    public void print(String task) {
-
-        if (task.length() == PRINT.length()) {
-            Tasks.entrySet().stream()
-                    .filter(a -> !a.getValue().getCompleted())
-                    .forEach(a -> System.out.printf("%d. [ ] %s%n", a.getKey(), a.getValue().getTaskName()));
-
+    public Map<String, Task> print(String command) {
+        if (command.length() == Constants.PRINT.length()) {
+            return tasks.entrySet().stream()
+                    .filter(a -> !a.getValue().getCompleted()).collect(Collectors.toMap(a -> a.getKey(), a -> a.getValue()));
         } else {
-            Tasks.forEach((key, value) -> System.out.printf("%d. %s %s%n", key, value.getCompleted() ? "[X]" : "[ ]", value.getTaskName()));
+            return tasks;
         }
-
     }
+
     @Override
     public void delete(String id) {
-        Task task = Tasks.get(Integer.parseInt(id));
-        if (task != null) {
-            Tasks.remove(Integer.parseInt(id));
+        if (tasks.get(id) != null) {
+            tasks.remove(id);
         } else {
-            System.err.println("Задачи по данному id не существует.");
+            logger.error("Задачи по данному id не существует.");
+            throw new NullPointerException("Задачи по данному id не существует.");
         }
-
-
     }
+
     @Override
     public void edit(String command) {
-        int id = Integer.parseInt(command.split(" ")[1]);
-        Task task = Tasks.get(id);
-        if (task != null) {
-            task.setTaskName(command.substring(command.indexOf(Integer.toString(id)) + 1).trim());
-            task.setCompleted(false);
+        String id = command.split(" ")[0];
+        if (tasks.get(id) != null) {
+            tasks.put(id, new Task(Parser.ParseCommands(command)));
         } else {
-            System.err.println("Задачи по данному id не существует.");
+            logger.error("Задачи по данному id не существует.");
+            throw new NullPointerException("Задачи по данному id не существует.");
         }
     }
+
     @Override
-    public void search(String substring) {
-        Tasks.entrySet().stream()
-                .filter(a -> a.getValue().getTaskName().contains(substring))
-                .forEach(a -> System.out.printf("%d. [ ] %s%n", a.getKey(), a.getValue().getTaskName()));
-
+    public Map<String, Task> search(String substring) {
+        tasks = taskRepository.getTasks();
+        return tasks.entrySet().stream()
+                .filter(a -> a.getValue().getTask().contains(substring)).collect(Collectors.toMap(a -> a.getKey(), a -> a.getValue()));
     }
-
 }

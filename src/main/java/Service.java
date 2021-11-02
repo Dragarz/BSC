@@ -1,13 +1,17 @@
+import Entities.Task;
+
+import java.util.Map;
+
 public interface Service {
     void add(String task);
 
     void toggle(String id);
 
-    void print(String task);
+    Map print(String task);
 
     void delete(String id);
 
     void edit(String command);
 
-    void search(String substring);
+    Map<String, Task> search(String substring);
 }

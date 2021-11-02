@@ -16,7 +16,7 @@
     <logger name="com.demo">
         <appender-ref ref="console"/>
     </logger>
-    <root level="ERROR">
+    <root level="DEBUG">
         <appender-ref ref="console" />
     </root>
 
