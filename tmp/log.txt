@@ -1,2 +1,7 @@
 
 13:36:24.312 [main] INFO  Main - command = add Hello world
+14:04:28.596 [main] INFO  Main - command = add hello world
+14:05:02.527 [main] INFO  Main - command = toggle 1
+14:05:02.532 [main] INFO  Main - Входящий параметр id = 1 результат: Task complited - true
+14:05:39.045 [main] INFO  Main - command = toggle 2
+14:05:39.045 [main] ERROR Main - Введен не существующий id - 2

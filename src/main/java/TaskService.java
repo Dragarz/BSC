@@ -1,10 +1,7 @@
-import org.slf4j.LoggerFactory;
-import org.slf4j.Logger;
 import java.util.HashMap;
 import java.util.Map;
 
 public class TaskService implements Service{
-    public static final Logger logger = LoggerFactory.getLogger(TaskService.class);
     private static final String PRINT = "print";
     private static Map<Integer, Task> Tasks = new HashMap<>();
     private static int id = 1;
@@ -23,12 +20,12 @@ public class TaskService implements Service{
         Task task = Tasks.get(Integer.parseInt(id));
         if (task != null) {
             task.switchCompleted();
-            logger.info("Входящий параметр id = " + id + " результат: Task complited - " + task.getCompleted());
+            Main.logger.debug("Входящий параметр id = " + id + ", результат: Task complited - " + task.getCompleted());
         } else {
             try{
                 throw new RuntimeException();
             }catch (RuntimeException e) {
-                logger.error("Введен не существующий id - " + id);
+                Main.logger.error("Введен не существующий id - " + id);
                 System.err.println("Задачи по данному id не существует.");
             }
         }
