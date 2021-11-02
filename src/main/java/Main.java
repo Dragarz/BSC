@@ -1,6 +1,7 @@
 
 import org.apache.commons.lang3.StringUtils;
-
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -8,7 +9,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 class Main {
-
+    static final Logger logger = LoggerFactory.getLogger(Main.class);
     static final Pattern ADD_PATTERN = Pattern.compile("add .+");
     static final Pattern TOGGLE_PATTERN = Pattern.compile("toggle \\d+");
     static final Pattern PRINT_PATTERN = Pattern.compile("print|print all");
@@ -26,6 +27,7 @@ class Main {
             Service taskService = new TaskService();
             while (!command.equals(QUIT)) {
                 command = reader.readLine().trim();
+                logger.info("command = " + command, taskService);
                 if (command.equals("")) {
                     System.err.println("Строка пуста или состоит из пробелов! Повторите ввод: ");
                     continue;
@@ -33,6 +35,7 @@ class Main {
                 restPartMatcher = REST_PART_PATTERN.matcher(command);
                 if (command.equals(QUIT)) {
                     System.out.println("Конец программы!");
+
 
                 } else if (ADD_PATTERN.matcher(command).matches()) {
                     taskService.add(restPartMatcher.replaceAll(StringUtils.EMPTY).trim());
@@ -48,6 +51,7 @@ class Main {
                     taskService.search(restPartMatcher.replaceAll(StringUtils.EMPTY).trim());
                 } else {
                     System.err.println("Команда не найдена повторите ввод: ");
+                    logger.debug("Ошибка формата ввода. Введённая команда: " + command);
                 }
             }
         } catch (IOException ignored) {
