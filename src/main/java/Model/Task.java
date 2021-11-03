@@ -16,6 +16,10 @@ public class Task {
         return completed;
     }
 
+    public String getId(){
+        return id;
+    }
+
     public void setTask(String task){
         this.task = task;
     }
@@ -27,9 +31,8 @@ public class Task {
     public void setId(String id){
         this.id = id;
     }
-    public String getId(){
-        return id;
-    }
+
+
 
     public String toString(){
         return String.format("%s. %s %s%n", id, completed ? "[X]" : "[ ]", task);
