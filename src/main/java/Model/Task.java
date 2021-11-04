@@ -12,7 +12,7 @@ public class Task {
         return task;
     }
 
-    public boolean getCompleted(){
+    public boolean getTaskCondition(){
         return completed;
     }
 

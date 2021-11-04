@@ -9,13 +9,9 @@ public interface Service {
 
     void toggle(String id);
 
-    void print(String command);
-
     void delete(String id);
 
     void edit(String command);
 
-    void search(String substring);
-
-    Map<String, Task> getTasks();
+    Map<String, Task> getTasks(String command);
 }

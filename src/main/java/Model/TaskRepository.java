@@ -4,12 +4,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class TaskRepository implements Repository{
-    private Map<String, Task> tasks = new HashMap<>();
+    private final Map<String, Task> tasks = new HashMap<>();
     private Integer id = 0;
 
-    public Map getAllTasks(){
+    public Map<String, Task> getAllTasks(){
         return tasks;
     }
+
     public int getId(){ return id;}
 
     public void addTask(String idTask, Task task){
@@ -17,6 +18,7 @@ public class TaskRepository implements Repository{
         task.setId(id.toString());
         tasks.put(task.getId(), task);
     }
+
     public void removeTask(String id){
         tasks.remove(id);
     }

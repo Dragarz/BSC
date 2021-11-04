@@ -1,12 +1,16 @@
 import Service.Service;
 import Utils.Constants;
 import Utils.ParserUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
 
 public class Controller {
+    public static final Logger logger = LoggerFactory.getLogger(Controller.class);
     Service service;
 
     public Controller(Service service) {
@@ -30,13 +34,14 @@ public class Controller {
                 } else if (Constants.ADD_PATTERN.matcher(command).matches()) {
                     service.add(ParserUtil.parseCommands(command).trim());
                 } else if (Constants.TOGGLE_PATTERN.matcher(command).matches()) {
-                    try {
+
                         service.toggle(ParserUtil.parseCommands(command).trim());
-                    }catch(NullPointerException e){
-                        System.out.println(e.getMessage());
-                    }
+
                 } else if (Constants.PRINT_PATTERN.matcher(command).matches()) {
-                        service.print(ParserUtil.parseCommands(command).trim());
+
+                    service.getTasks(ParserUtil.parseCommands(command).trim())
+                            .forEach((key, value) -> System.out.print(value));
+
                 } else if (Constants.DELETE_PATTERN.matcher(command).matches()) {
                     try {
                         service.delete(ParserUtil.parseCommands(command).trim());
@@ -50,13 +55,22 @@ public class Controller {
                         System.out.println(e.getMessage());
                     }
                 } else if (Constants.SEARCH_PATTERN.matcher(command).matches()) {
-                    service.search(ParserUtil.parseCommands(command).trim());
+
+                    service.getTasks(ParserUtil.parseCommands(command).trim())
+                            .forEach((key, value) -> System.out.print(value));
+
                 } else {
-                    System.err.println("Ошибка ввода!");
+                    try{
+                        throw new Exception("Введена не корректная команда " + command);
+                    }catch (Exception e){
+                        System.out.println(e.getMessage());
+                        logger.error(e.getMessage());
+                    }
+
                 }
             }
 
-        } catch (IOException e) {
+        } catch (IOException ignored) {
 
         }
     }

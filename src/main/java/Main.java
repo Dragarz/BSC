@@ -8,6 +8,5 @@ public class Main {
         TaskService service = new TaskService(repository);
         Controller controller = new Controller(service);
         controller.commandControl();
-
     }
 }
