@@ -20,7 +20,7 @@ public class ConsoleHandler {
     public static final String QUIT = "quit";
     public static final String PRINT = "print";
 
-    TaskService service;
+    private TaskService service;
 
     public ConsoleHandler(Repository repository) {
         service = new TaskServiceImpl(repository);
