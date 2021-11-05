@@ -1,26 +1,24 @@
 package Model;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
-public class TaskRepository implements Repository{
-    private final Map<String, Task> tasks = new HashMap<>();
-    private Integer id = 0;
+public class TaskRepository implements Repository {
+    private final List<Task> tasks = new ArrayList<>();
+    private int idGenerator = 0;
 
-    public Map<String, Task> getAllTasks(){
+    public List<Task> getAllTasks() {
         return tasks;
     }
 
-    public int getId(){ return id;}
-
-    public void addTask(String idTask, Task task){
-        id += Integer.parseInt(idTask);
-        task.setId(id.toString());
-        tasks.put(task.getId(), task);
+    public void addTask(Task task) {
+        idGenerator++;
+        task.setId(Integer.toString(idGenerator));
+        tasks.add(task);
     }
 
-    public void removeTask(String id){
-        tasks.remove(id);
+    public void removeTask(Task task) {
+        tasks.remove(task);
     }
 
 

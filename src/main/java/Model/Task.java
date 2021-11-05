@@ -1,43 +1,21 @@
 package Model;
 
+import lombok.Data;
+
+
+@Data
 public class Task {
-    private String task;
+    private String taskText;
     private boolean completed;
-    private String id = "1";
-    public Task(String task, boolean completed){
-        this.task = task;
-        this.completed = completed;
-    }
-    public String getTask(){
-        return task;
-    }
+    private String id;
 
-    public boolean getTaskCondition(){
-        return completed;
-    }
-
-    public String getId(){
-        return id;
-    }
-
-    public void setTask(String task){
-        this.task = task;
-    }
-
-    public void setCompleted(boolean completed){
+    public Task(String task, boolean completed) {
+        this.taskText = task;
         this.completed = completed;
     }
 
-    public void setId(String id){
-        this.id = id;
+    public String toString() {
+        return String.format("%s. %s %s%n", id, completed ? "[X]" : "[ ]", taskText);
     }
-
-
-
-    public String toString(){
-        return String.format("%s. %s %s%n", id, completed ? "[X]" : "[ ]", task);
-    }
-
-
 
 }
